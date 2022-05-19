@@ -4,8 +4,10 @@ using InsurancePolicyService.Application.Common.Exceptions;
 using InsurancePolicyService.Application.Common.Interfaces;
 using InsurancePolicyService.Application.Common.Interfaces.Repositories;
 using InsurancePolicyService.Application.Common.Models;
+using InsurancePolicyService.Application.Common.Models.Messages;
 using InsurancePolicyService.Application.Common.Models.Repositories;
 using MediatR;
+using Polly;
 
 namespace InsurancePolicyService.Application.PolicyInsurance.Commands.CreatePolicyInsurance;
 
@@ -54,15 +56,18 @@ public class
     private readonly IAddressValidator _addressValidator;
     private readonly IStateRegulationService _stateRegulationService;
     private readonly IInsurancePolicyRepository _insurancePolicyRepository;
+    private readonly IAccountingNotificationQueue _accountingNotificationQueue;
 
     public CreatePolicyInsuranceCommandHandler(
         IAddressValidator addressValidator,
         IStateRegulationService stateRegulationService,
-        IInsurancePolicyRepository insurancePolicyRepository)
+        IInsurancePolicyRepository insurancePolicyRepository,
+        IAccountingNotificationQueue accountingNotificationQueue)
     {
         _addressValidator = addressValidator;
         _stateRegulationService = stateRegulationService;
         _insurancePolicyRepository = insurancePolicyRepository;
+        _accountingNotificationQueue = accountingNotificationQueue;
     }
     
     public async Task<CreatePolicyInsuranceDto> Handle(CreatePolicyInsuranceCommand request, 
@@ -105,7 +110,7 @@ public class
                 EffectiveDate = request.EffectiveDate,
                 ExpirationDate = request.ExpirationDate,
                 Premium = request.Premium
-            });
+            }, cancellationToken);
         
         if (!stateRegulationValidationResult.IsValid)
             throw new RequestValidationException(stateRegulationValidationResult.ErrorMessage!);
@@ -135,6 +140,13 @@ public class
                     FullAddress = request.Address
                 }
             }, cancellationToken).ConfigureAwait(false);
+
+        // Not awaiting this action
+        _accountingNotificationQueue.QueueBackgroundWorkItemAsync(
+            new InsurancePolicyCreationMessage
+            {
+                InsurancePolicyID = insurancePolicyId
+            });
         
         return new CreatePolicyInsuranceDto
         {

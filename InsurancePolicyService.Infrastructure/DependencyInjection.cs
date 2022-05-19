@@ -22,6 +22,7 @@ public static class DependencyInjection
         // Services
         services.AddSingleton<IAddressValidator, AddressValidator>();
         services.AddSingleton<IStateRegulationService, StateRegulationService>();
+        services.AddScoped<IAccountingService, AccountingService>();
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
@@ -29,6 +30,13 @@ public static class DependencyInjection
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IInsurancePolicyRepository, InsurancePolicyRepository>();
         
+        // Queues
+        services.AddSingleton<IAccountingNotificationQueue>(_ => 
+            new AccountingNotificationQueue(20));
+        
+        // BackgroundTasks
+        services.AddHostedService<AccountingNotificationQueueListener>();
+
         return services;
     }
 }

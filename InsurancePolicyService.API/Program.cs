@@ -1,4 +1,3 @@
-using InsurancePolicyService.API;
 using InsurancePolicyService.API.Middlewares;
 using InsurancePolicyService.Application;
 using InsurancePolicyService.Infrastructure;

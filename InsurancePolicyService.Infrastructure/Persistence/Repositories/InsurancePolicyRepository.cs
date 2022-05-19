@@ -86,9 +86,9 @@ public class InsurancePolicyRepository : IInsurancePolicyRepository
                 ExpirationDate = createInsurancePolicy.ExpirationDate,
                 Premium = createInsurancePolicy.Premium,
                 
-                VehicleID = vehicleId.Value,
+                VehicleID = vehicleId!.Value,
                 UserID = userId.Value,
-                AddressID = addressId.Value
+                AddressID = addressId!.Value
             }, cancellationToken).ConfigureAwait(false)).Entity;
 
         await _applicationDbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

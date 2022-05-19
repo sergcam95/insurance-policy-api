@@ -22,6 +22,7 @@ public class ExceptionHandlerMiddleware
         try
         {
             await _next(context);
+            _logger.LogInformation("Request completed");
         }
         catch (Exception e)
         {
