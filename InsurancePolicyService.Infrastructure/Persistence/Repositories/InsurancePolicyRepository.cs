@@ -2,6 +2,7 @@ using InsurancePolicyService.Application.Common.Exceptions;
 using InsurancePolicyService.Application.Common.Interfaces.Repositories;
 using InsurancePolicyService.Application.Common.Models.Repositories;
 using InsurancePolicyService.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace InsurancePolicyService.Infrastructure.Persistence.Repositories;
 
@@ -49,12 +50,16 @@ public class InsurancePolicyRepository : IInsurancePolicyRepository
                 throw new RequestValidationException("Cannot create user because it is null");
             var user = await _userRepository.GetUserByDriversLicenseNumberAsync
                 (createInsurancePolicy.User.DriversLicenseNumber, cancellationToken).ConfigureAwait(false);
-            if (user != null)
-                throw new RequestValidationException("User already exists with driver's license " +
-                                                     $"{createInsurancePolicy.User.DriversLicenseNumber}");
 
-            userId = await _userRepository.CreateUserAsync(createInsurancePolicy.User, 
-            cancellationToken).ConfigureAwait(false);
+            if (user == null)
+            {
+                userId = await _userRepository.CreateUserAsync(createInsurancePolicy.User, 
+                    cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                userId = user.UserID;
+            }
         }
 
         var address = await _addressRepository.GetAddressByFullAddressNameAsync(userId.Value,
@@ -78,7 +83,7 @@ public class InsurancePolicyRepository : IInsurancePolicyRepository
             cancellationToken).ConfigureAwait(false);
             await _applicationDbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
-        
+
         var newInsurancePolicy = (await _applicationDbContext.InsurancePolicies.AddAsync(
             new InsurancePolicy
             {
@@ -96,5 +101,31 @@ public class InsurancePolicyRepository : IInsurancePolicyRepository
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         
         return newInsurancePolicy.InsurancePolicyID;
+    }
+
+    public async Task<IEnumerable<InsurancePolicy>> GetInsurancePoliciesByDriversLicenseAsync(
+        string driversLicense, bool? ascVehicleYear = null, bool includeExpiredPolicies = false,
+        CancellationToken cancellationToken = default)
+    {
+        var currentDateTime = DateTime.UtcNow;
+        
+        var query = _applicationDbContext.InsurancePolicies
+            .AsNoTracking()
+            .Include(e => e.User)
+            .Include(e => e.Vehicle)
+            .Where(e => e.User.DriversLicenseNumber.ToLower() == driversLicense.ToLower());
+        
+        if (!includeExpiredPolicies)
+            query = query.Where(e => e.ExpirationDate > currentDateTime);
+        
+        if (ascVehicleYear.HasValue)
+        {
+            if (ascVehicleYear.Value)
+                query = query.OrderBy(e => e.Vehicle.Year);
+            else
+                query = query.OrderByDescending(e => e.Vehicle.Year);
+        }
+
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

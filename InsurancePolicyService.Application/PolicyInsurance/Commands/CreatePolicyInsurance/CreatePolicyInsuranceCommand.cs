@@ -1,4 +1,3 @@
-using System.Xml;
 using FluentValidation;
 using InsurancePolicyService.Application.Common.Exceptions;
 using InsurancePolicyService.Application.Common.Interfaces;
@@ -7,7 +6,6 @@ using InsurancePolicyService.Application.Common.Models;
 using InsurancePolicyService.Application.Common.Models.Messages;
 using InsurancePolicyService.Application.Common.Models.Repositories;
 using MediatR;
-using Polly;
 
 namespace InsurancePolicyService.Application.PolicyInsurance.Commands.CreatePolicyInsurance;
 
@@ -37,8 +35,10 @@ public class CreatePolicyInsuranceCommandValidator : AbstractValidator<CreatePol
         RuleFor(e => e.DriversLicenseNumber).NotEmpty();
         RuleFor(e => e.Address).NotEmpty();
 
+        // Not working
         RuleFor(e => e.VehicleYear)
-            .LessThanOrEqualTo(0);
+            .NotEmpty()
+            .GreaterThan(0);
         RuleFor(e => e.VehicleModel).NotEmpty();
         RuleFor(e => e.VehicleManufacturer).NotEmpty();
         RuleFor(e => e.VehicleName).NotEmpty();
@@ -76,6 +76,9 @@ public class
         var creationDateTime = DateTime.UtcNow;
 
         #region Business rules
+
+        if (request.VehicleYear <= 0)
+            throw new RequestValidationException("Year is invalid. It should be greater than 0");
 
         var addressValidationResult =
             await _addressValidator.ValidateAddressAsync(request.Address, cancellationToken).ConfigureAwait(false);
