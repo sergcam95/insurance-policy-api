@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fc5d081e_002D7fc8_002D418e_002Da07f_002D476288aadbfa/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;And&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;xUnit::8AC289C0-31B4-46EC-9959-EA2B366725B5::net6.0::InsurancePolicyService.Infrastructure.UnitTests.Common.AddressValidatorUnitTests&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+    &lt;Project Location="/Users/sergiocamacho/dev/code-challenges-interviews/superformula/InsurancePolicyService/InsurancePolicyService.Infrastructure.UnitTests" Presentation="&amp;lt;InsurancePolicyService.Infrastructure.UnitTests&amp;gt;" /&gt;
+    &lt;Namespace&gt;InsurancePolicyService.Infrastructure.UnitTests.Common&lt;/Namespace&gt;
+  &lt;/And&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
