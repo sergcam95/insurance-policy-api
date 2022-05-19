@@ -1,4 +1,8 @@
+using InsurancePolicyService.Application.Common.Interfaces;
+using InsurancePolicyService.Application.Common.Interfaces.Repositories;
+using InsurancePolicyService.Infrastructure.Common;
 using InsurancePolicyService.Infrastructure.Persistence;
+using InsurancePolicyService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +18,16 @@ public static class DependencyInjection
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
+
+        // Services
+        services.AddSingleton<IAddressValidator, AddressValidator>();
+        services.AddSingleton<IStateRegulationService, StateRegulationService>();
+
+        // Repositories
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IVehicleRepository, VehicleRepository>();
+        services.AddScoped<IInsurancePolicyRepository, InsurancePolicyRepository>();
         
         return services;
     }
