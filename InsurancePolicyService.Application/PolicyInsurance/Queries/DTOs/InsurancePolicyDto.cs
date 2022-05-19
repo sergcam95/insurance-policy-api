@@ -1,5 +1,5 @@
 
-namespace InsurancePolicyService.Application.PolicyInsurance.Queries.GetInsurancePoliciesByDriversLicense;
+namespace InsurancePolicyService.Application.PolicyInsurance.Queries.DTOs;
 
 public class InsurancePolicyDto
 {

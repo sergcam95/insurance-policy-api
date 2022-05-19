@@ -128,4 +128,15 @@ public class InsurancePolicyRepository : IInsurancePolicyRepository
 
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    public Task<InsurancePolicy> GetInsurancePolicyByIdAndDriversLicense(
+        int insurancePolicyId, string driversLicense, CancellationToken cancellationToken = default)
+    {
+        return _applicationDbContext.InsurancePolicies
+            .Include(e => e.User)
+            .Include(e => e.Vehicle)
+            .SingleOrDefaultAsync(e => e.InsurancePolicyID == insurancePolicyId &&
+                                              e.User.DriversLicenseNumber.ToLower() ==
+                                              driversLicense.ToLower(), cancellationToken);
+    }
 }

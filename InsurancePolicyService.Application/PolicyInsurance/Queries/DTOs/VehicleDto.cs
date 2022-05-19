@@ -1,6 +1,6 @@
-namespace InsurancePolicyService.Domain;
+namespace InsurancePolicyService.Application.PolicyInsurance.Queries.DTOs;
 
-public class Vehicle
+public class VehicleDto
 {
     public int VehicleID { get; set; }
 
@@ -8,6 +8,4 @@ public class Vehicle
     public string Model { get; set; } = null!;
     public string Manufacturer { get; set; } = null!;
     public string Name { get; set; } = null!;
-
-    public int UserID { get; set; }
 }

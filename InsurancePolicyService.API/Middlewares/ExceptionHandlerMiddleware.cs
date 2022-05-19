@@ -48,6 +48,8 @@ public class ExceptionHandlerMiddleware
     {
         switch (e)
         {
+            case NotFoundException:
+                return HttpStatusCode.NotFound;
             case RequestValidationException:
                 return HttpStatusCode.BadRequest;
             default:

@@ -1,5 +1,5 @@
 using AutoMapper;
-using InsurancePolicyService.Application.PolicyInsurance.Queries.GetInsurancePoliciesByDriversLicense;
+using InsurancePolicyService.Application.PolicyInsurance.Queries.DTOs;
 using InsurancePolicyService.Domain;
 
 namespace InsurancePolicyService.Application.Common;

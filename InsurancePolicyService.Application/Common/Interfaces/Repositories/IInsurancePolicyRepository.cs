@@ -11,4 +11,8 @@ public interface IInsurancePolicyRepository
     Task<IEnumerable<InsurancePolicy>> GetInsurancePoliciesByDriversLicenseAsync(
         string driversLicense, bool? ascVehicleYear = null, bool includeExpiredPolicies = false,
         CancellationToken cancellationToken = default);
+
+    Task<InsurancePolicy> GetInsurancePolicyByIdAndDriversLicense(
+        int insurancePolicyId, string driversLicense,
+        CancellationToken cancellationToken = default);
 }

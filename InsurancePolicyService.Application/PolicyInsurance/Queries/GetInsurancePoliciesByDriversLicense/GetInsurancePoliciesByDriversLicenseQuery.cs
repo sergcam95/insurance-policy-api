@@ -1,14 +1,14 @@
 using AutoMapper;
 using FluentValidation;
 using InsurancePolicyService.Application.Common.Interfaces.Repositories;
-using InsurancePolicyService.Domain;
+using InsurancePolicyService.Application.PolicyInsurance.Queries.DTOs;
 using MediatR;
 
 namespace InsurancePolicyService.Application.PolicyInsurance.Queries.GetInsurancePoliciesByDriversLicense;
 
 public class GetInsurancePoliciesByDriversLicenseQuery : IRequest<IEnumerable<InsurancePolicyDto>>
 {
-    public string DriversLicense { get; set; }
+    public string DriversLicense { get; set; } = null!;
     public bool? AscVehicleYear { get; set; }
     public bool IncludeExpiredPolicies { get; set; } = false;
 }
