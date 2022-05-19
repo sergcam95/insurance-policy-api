@@ -13,7 +13,7 @@ public class InsurancePolicyConfiguration : IEntityTypeConfiguration<InsurancePo
         builder.Property<decimal>(e => e.Premium)
             .HasPrecision(6, 2);
 
-        builder.HasOne<User>()
+        builder.HasOne<User>(e => e.User)
             .WithMany()
             .HasForeignKey(e => e.UserID)
             .OnDelete(DeleteBehavior.NoAction);
@@ -23,7 +23,7 @@ public class InsurancePolicyConfiguration : IEntityTypeConfiguration<InsurancePo
             .HasForeignKey(e => e.AddressID)
             .OnDelete(DeleteBehavior.NoAction);
         
-        builder.HasOne<Vehicle>()
+        builder.HasOne<Vehicle>(e => e.Vehicle)
             .WithMany()
             .HasForeignKey(e => e.VehicleID)
             .OnDelete(DeleteBehavior.NoAction);
