@@ -37,6 +37,8 @@ Prerequisites:
   - Do not use HTTPS protocol
 - If queries get more and more complex, use Dapper for all DBs operations. Only changes in Infrastructure project will be needed (new repository concrete classes and register them in DI)
 - Monitoring can be achieved with the cloud provider used for deploying API
+- Move `AccountingNotificationQueue`to a cloud Queue such as Azure Service Bus or its equivalent in AWS
+- Move BackgroundTask `AccountingNotificationQueueListener` to the cloud using Azure Function or AWS Lambda. This will allow more control for scaling the API or the worker depending on their load 
 
 
 ## Considerations when deploying to a cloud provider
