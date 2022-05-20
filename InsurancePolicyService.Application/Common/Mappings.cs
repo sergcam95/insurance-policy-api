@@ -1,4 +1,6 @@
 using AutoMapper;
+using InsurancePolicyService.Application.Common.Models;
+using InsurancePolicyService.Application.PolicyInsurance.Commands.CreatePolicyInsurance;
 using InsurancePolicyService.Application.PolicyInsurance.Queries.GetInsurancePoliciesByDriversLicense;
 using InsurancePolicyService.Domain;
 
@@ -10,5 +12,7 @@ public class Mappings : Profile
     {
         CreateMap<Vehicle, VehicleDto>();
         CreateMap<InsurancePolicy, InsurancePolicyDto>();
+
+        CreateMap<CreatePolicyInsuranceCommand, InsurancePolicyStateRegulation>();
     }
 }

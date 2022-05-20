@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using InsurancePolicyService.Application.Common;
 using InsurancePolicyService.Application.Common.Exceptions;
 using InsurancePolicyService.Application.Common.Interfaces;
 using InsurancePolicyService.Application.Common.Interfaces.Repositories;
@@ -38,11 +40,16 @@ public class CreatePolicyInsuranceCommandUnitTests
                 It.IsAny<InsurancePolicyStateRegulation>(), It.IsAny<CancellationToken>()))
             .Returns((true, null));
 
+        var autoMapperConfig = new MapperConfiguration(x => 
+            x.AddProfile(new Mappings()));
+        var mapper = autoMapperConfig.CreateMapper();
+        
         _createPolicyInsuranceCommandHandler = new CreatePolicyInsuranceCommandHandler(
             _mockAddressValidator.Object,
             _mockstateRegulationService.Object,
             _mockInsurancePolicyRepository.Object,
-            _mockAccountingNotificationQueue.Object
+            _mockAccountingNotificationQueue.Object, 
+            mapper
         );
     }
 

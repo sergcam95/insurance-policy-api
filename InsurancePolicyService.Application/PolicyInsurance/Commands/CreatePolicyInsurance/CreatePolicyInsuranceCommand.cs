@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation;
 using InsurancePolicyService.Application.Common.Exceptions;
 using InsurancePolicyService.Application.Common.Interfaces;
@@ -57,17 +58,20 @@ public class
     private readonly IStateRegulationService _stateRegulationService;
     private readonly IInsurancePolicyRepository _insurancePolicyRepository;
     private readonly IAccountingNotificationQueue _accountingNotificationQueue;
+    private readonly IMapper _mapper;
 
     public CreatePolicyInsuranceCommandHandler(
         IAddressValidator addressValidator,
         IStateRegulationService stateRegulationService,
         IInsurancePolicyRepository insurancePolicyRepository,
-        IAccountingNotificationQueue accountingNotificationQueue)
+        IAccountingNotificationQueue accountingNotificationQueue,
+        IMapper mapper)
     {
         _addressValidator = addressValidator;
         _stateRegulationService = stateRegulationService;
         _insurancePolicyRepository = insurancePolicyRepository;
         _accountingNotificationQueue = accountingNotificationQueue;
+        _mapper = mapper;
     }
     
     public async Task<CreatePolicyInsuranceDto> Handle(CreatePolicyInsuranceCommand request, 
@@ -98,26 +102,11 @@ public class
         #endregion
 
         var stateRegulationValidationResult = _stateRegulationService.ValidateInsurancePolicy(
-            new InsurancePolicyStateRegulation
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                DriversLicenseNumber = request.DriversLicenseNumber,
-                Address = request.Address,
-                
-                VehicleYear = request.VehicleYear,
-                VehicleName = request.VehicleName,
-                VehicleManufacturer = request.VehicleManufacturer,
-                VehicleModel = request.VehicleModel,
-                
-                EffectiveDate = request.EffectiveDate,
-                ExpirationDate = request.ExpirationDate,
-                Premium = request.Premium
-            }, cancellationToken);
+            _mapper.Map<InsurancePolicyStateRegulation>(request), cancellationToken);
         
         if (!stateRegulationValidationResult.IsValid)
             throw new RequestValidationException(stateRegulationValidationResult.ErrorMessage!);
-
+        
         var insurancePolicyId = await _insurancePolicyRepository.CreateInsurancePolicyAsync(
             new CreateInsurancePolicy
             {

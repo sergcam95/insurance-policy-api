@@ -12,7 +12,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Address> Addresses => Set<Address>();
     
-    public DbSet<InsurancePolicy> InsurancePolicies => Set<InsurancePolicy>();
+    public virtual DbSet<InsurancePolicy> InsurancePolicies => Set<InsurancePolicy>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
